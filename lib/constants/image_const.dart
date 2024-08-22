@@ -1,0 +1,13 @@
+const String settingImg="assets/images/setting_icon.webp";
+const String yellowImg="assets/images/yellow.webp";
+const String greenImg="assets/images/green.webp";
+const String whiteImg="assets/images/white.webp";
+const String bgImg="assets/images/bg.webp";
+const String logoImg="assets/images/logo.webp";
+const String restartImg="assets/images/replay_icon.webp";
+const String backImg="assets/images/back_btn.webp";
+const String homeImg="assets/images/home_btn.webp";
+const String soundImg="assets/images/sound_btn.webp";
+const String muteImg="assets/images/sound_off.webp";
+const String gameBtn="assets/images/game_btn.webp";
+const String closeImg="assets/images/close_btn.webp";
