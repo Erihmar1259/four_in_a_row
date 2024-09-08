@@ -296,7 +296,41 @@ final controller=Get.put(GameController());
                 ),
               ),
               kSizedBoxH30,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
+                child: CustomText(text: "Sound Settings",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+              ),
+          Obx(  () =>  GestureDetector(
+                onTap: (){
+                  controller.setSoundOnOff();
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  width: MediaQuery.of(context).size.width,
+                  height: 60.h,
+                  decoration: BoxDecoration(
+                    color: mainColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(
+                        text: "Sound",
+                        color: whiteColor,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      kSizedBoxW5,
+                  Image.asset((controller.isMuted.value==true)?"assets/images/sound_off.webp":"assets/images/sound_btn.webp", width: 40.w, height: 40.h)
 
+                    ],
+                  ),
+                ),
+              ),),
+
+              kSizedBoxH30,
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
                 child: CustomText(text: "General",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),

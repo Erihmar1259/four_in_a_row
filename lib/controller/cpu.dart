@@ -19,17 +19,45 @@ abstract class Cpu {
   Future<int> chooseCol(List<List<int>> board);
 }
 
+// class DumbCpu extends Cpu {
+//   DumbCpu(String player) : super(player);
+//
+//   @override
+//   Future<int> chooseCol(List<List<int>> board) async {
+//     await Future.delayed(Duration(seconds: _random.nextInt(2)));
+//     int col;
+//     do {
+//       col = _random.nextInt(7);
+//     } while (_getColumnTarget(board, col) == -1);
+//     return col;
+//   }
+//
+//   int _getColumnTarget(List<List<int>> board, int col) {
+//     for (int row = 5; row >= 0; row--) {
+//       if (board[row][col] == 0) {
+//         return row;
+//       }
+//     }
+//     return -1;
+//   }
+//
+//   @override
+//   String toString() => 'DUMB CPU';
+// }
 class DumbCpu extends Cpu {
   DumbCpu(String player) : super(player);
 
   @override
   Future<int> chooseCol(List<List<int>> board) async {
     await Future.delayed(Duration(seconds: _random.nextInt(2)));
-    int col;
-    do {
-      col = _random.nextInt(7);
-    } while (_getColumnTarget(board, col) == -1);
-    return col;
+    List<int> possibleCols = [];
+    for (int col = 0; col < 7; col++) {
+      if (_getColumnTarget(board, col) != -1) {
+        possibleCols.add(col);
+      }
+    }
+    possibleCols.shuffle(); // Add randomness
+    return possibleCols.isNotEmpty ? possibleCols.first : -1;
   }
 
   int _getColumnTarget(List<List<int>> board, int col) {
@@ -45,18 +73,67 @@ class DumbCpu extends Cpu {
   String toString() => 'DUMB CPU';
 }
 
+
 class HarderCpu extends Cpu {
+  // HarderCpu(String player) : super(player);
+  //
+  // @override
+  // Future<int> chooseCol(List<List<int>> board) async {
+  //   final List<double> scores = List.filled(7, 0);
+  //   await Future.delayed(Duration(seconds: 1 + _random.nextInt(2)));
+  //   return _compute(board, 0, 1, scores);
+  // }
+  //
+  // int _compute(List<List<int>> board, int step, int deepness, List<double> scores) {
+  //   for (var i = 0; i < 7; ++i) {
+  //     final boardCopy = _cloneBoard(board);
+  //     final target = _getColumnTarget(boardCopy, i);
+  //     if (target == -1) {
+  //       scores[i] = double.nan;
+  //       continue;
+  //     }
+  //
+  //     final coordinate = Coordinate(i, target);
+  //     _setBox(boardCopy, coordinate, image);
+  //     if (_checkWinner(boardCopy, coordinate, image)) {
+  //       scores[i] += deepness / (step + 1);
+  //       continue;
+  //     }
+  //
+  //     for (var j = 0; j < 7; ++j) {
+  //       final target = _getColumnTarget(boardCopy, j);
+  //       if (target == -1) {
+  //         continue;
+  //       }
+  //
+  //       final coordinate = Coordinate(j, target);
+  //       _setBox(boardCopy, coordinate, otherPlayer);
+  //       if (_checkWinner(boardCopy, coordinate, otherPlayer)) {
+  //         scores[i] -= deepness / (step + 1);
+  //         continue;
+  //       }
+  //
+  //       if (step + 1 < deepness) {
+  //         _compute(boardCopy, step + 1, deepness, scores);
+  //       }
+  //     }
+  //   }
+  //
+  //   return _getBestScoreIndex(scores);
+  // }
   HarderCpu(String player) : super(player);
 
   @override
   Future<int> chooseCol(List<List<int>> board) async {
     final List<double> scores = List.filled(7, 0);
     await Future.delayed(Duration(seconds: 1 + _random.nextInt(2)));
-    return _compute(board, 0, 1, scores);
+    List<int> possibleCols = List.generate(7, (index) => index);
+    possibleCols.shuffle(); // Add randomness
+    return _compute(board, 0, 1, scores, possibleCols);
   }
 
-  int _compute(List<List<int>> board, int step, int deepness, List<double> scores) {
-    for (var i = 0; i < 7; ++i) {
+  int _compute(List<List<int>> board, int step, int deepness, List<double> scores, List<int> possibleCols) {
+    for (var i in possibleCols) {
       final boardCopy = _cloneBoard(board);
       final target = _getColumnTarget(boardCopy, i);
       if (target == -1) {
@@ -71,7 +148,7 @@ class HarderCpu extends Cpu {
         continue;
       }
 
-      for (var j = 0; j < 7; ++j) {
+      for (var j in possibleCols) {
         final target = _getColumnTarget(boardCopy, j);
         if (target == -1) {
           continue;
@@ -85,7 +162,7 @@ class HarderCpu extends Cpu {
         }
 
         if (step + 1 < deepness) {
-          _compute(boardCopy, step + 1, deepness, scores);
+          _compute(boardCopy, step + 1, deepness, scores, possibleCols);
         }
       }
     }
@@ -150,14 +227,43 @@ class HarderCpu extends Cpu {
 }
 
 class HardestCpu extends HarderCpu {
+  // HardestCpu(String player) : super(player);
+  //
+  // @override
+  // Future<int> chooseCol(List<List<int>> board) async {
+  //   int bestCol = -1;
+  //   double bestScore = double.negativeInfinity;
+  //
+  //   for (int col = 0; col < 7; col++) {
+  //     int row = _getColumnTarget(board, col);
+  //     if (row != -1) {
+  //       List<List<int>> boardCopy = _cloneBoard(board);
+  //       _setBox(boardCopy, Coordinate(col, row), image);
+  //       double score = _minimax(boardCopy, 4, double.negativeInfinity, double.infinity, false);
+  //       if (score > bestScore) {
+  //         bestScore = score;
+  //         bestCol = col;
+  //       }
+  //     }
+  //   }
+  //
+  //   // Ensure the chosen column is within the valid range
+  //   if (bestCol < 0 || bestCol >= 7) {
+  //     bestCol = 0; // Default to a valid column if out of range
+  //   }
+  //
+  //   return bestCol;
+  // }
   HardestCpu(String player) : super(player);
 
   @override
   Future<int> chooseCol(List<List<int>> board) async {
     int bestCol = -1;
     double bestScore = double.negativeInfinity;
+    List<int> possibleCols = List.generate(7, (index) => index);
+    possibleCols.shuffle(); // Add randomness
 
-    for (int col = 0; col < 7; col++) {
+    for (int col in possibleCols) {
       int row = _getColumnTarget(board, col);
       if (row != -1) {
         List<List<int>> boardCopy = _cloneBoard(board);
@@ -177,7 +283,6 @@ class HardestCpu extends HarderCpu {
 
     return bestCol;
   }
-
   double _minimax(List<List<int>> board, int depth, double alpha, double beta, bool isMaximizing) {
     if (depth == 0 || _isTerminalNode(board)) {
       return _evaluateBoard(board);

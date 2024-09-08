@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:four_in_a_row/constants/color_const.dart';
@@ -20,6 +21,9 @@ class GameController extends GetxController {
   RxInt sgPlayer2Wins = 0.obs;
   var isAiThinking = false.obs;
   late Cpu cpuPlayer;
+  final player1 = AudioPlayer();
+  final player = AudioPlayer();
+  RxBool isMuted = true.obs;
 
   @override
   void onInit() {
@@ -28,9 +32,34 @@ class GameController extends GetxController {
     player2Wins.value = box.read("p2") ?? 0;
     sgPlayer1Wins.value = box.read("sgP1") ?? 0;
     sgPlayer2Wins.value = box.read("sgP2") ?? 0;
+    isMuted.value = box.read("isMuted") ?? true;
+    playSound();
     super.onInit();
   }
+  void playSound() async {
+    await player.setReleaseMode(ReleaseMode.loop);
+    await player.play(
+      AssetSource('audio/MainTheme.mp3'),
+    );
 
+    if (isMuted.value) {
+      player.setVolume(0.0);
+    } else {
+      player.setVolume(1.0);
+    }
+
+  }
+
+  void setSoundOnOff() async {
+   final box = GetStorage();
+    isMuted.value = !isMuted.value;
+    if (isMuted.value) {
+      player.setVolume(0.0);
+    } else {
+      player.setVolume(1.0);
+    }
+    box.write("isMuted", isMuted.value);
+  }
   void dropDisc(int col) {
     var box = GetStorage();
     if (isGameOver.value) return;
@@ -44,27 +73,33 @@ class GameController extends GetxController {
           if (currentPlayer.value == 1) {
             if (isSinglePlayer.value) {
               sgPlayer1Wins.value++;
+              playWinSound();
               var sP1 = box.read("sgP1") ?? 0;
               if (sP1 < sgPlayer1Wins.value) {
                 box.write("sgP1", sgPlayer1Wins.value);
               }
+
             } else {
               player1Wins.value++;
+              playWinSound();
               var p1 = box.read("p1") ?? 0;
               if (p1 < player1Wins.value) {
                 box.write("p1", player1Wins.value);
               }
+
             }
 
           } else {
             if (isSinglePlayer.value) {
               sgPlayer2Wins.value++;
+              playWinSound();
               var sP2 = box.read("sgP2") ?? 0;
               if (sP2 < sgPlayer2Wins.value) {
                 box.write("sgP2", sgPlayer2Wins.value);
               }
             } else {
               player2Wins.value++;
+              playWinSound();
               var p2 = box.read("p2") ?? 0;
               if (p2 < player2Wins.value) {
                 box.write("p2", player2Wins.value);
@@ -104,6 +139,7 @@ class GameController extends GetxController {
                   )),
               cancel: TextButton(
                   onPressed: () {
+                    resetGame();
                     Get.offAll(const IntroScreen());
                   },
                   child: Image.asset(
@@ -125,7 +161,13 @@ class GameController extends GetxController {
       }
     }
   }
-
+  void playWinSound() async {
+    player1.play(
+      AssetSource('audio/yay.mp3'),
+    );
+    player1.setVolume(1.0);
+    Future.delayed(const Duration(seconds: 5)).then((value) => player1.stop());
+  }
   void aiMove() async {
     switch (aiDifficulty.value) {
       case 'Easy':
