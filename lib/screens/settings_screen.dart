@@ -1,6 +1,7 @@
 import 'package:animated_text_lerp/animated_text_lerp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:four_in_a_row/screens/change_language_screen.dart';
 import 'package:four_in_a_row/screens/privacy_policy_screen.dart';
 import 'package:four_in_a_row/utils/screen_navigation_extension.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,7 @@ final controller=Get.put(GameController());
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: CustomText(
-          text: "Settings",
+          text: "settings".tr,
           color: whiteColor,
           fontSize: 20.sp,
           fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ final controller=Get.put(GameController());
               SizedBox(height: 100.h,),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-                child: CustomText(text: "Score Board (Two Players Mode)",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                child: CustomText(text: "${'score_board'.tr}(${'multi_player'.tr})",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
               // Container(
               //   margin: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
@@ -179,7 +180,7 @@ final controller=Get.put(GameController());
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-                child: CustomText(text: "Score Board (Single Player Mode)",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                child: CustomText(text: "${'score_board'.tr}(${'single_player'.tr})",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
               // Container(
               //   margin: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
@@ -298,7 +299,7 @@ final controller=Get.put(GameController());
               kSizedBoxH30,
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-                child: CustomText(text: "Sound Settings",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                child: CustomText(text: "sound_settings".tr,color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
           Obx(  () =>  GestureDetector(
                 onTap: (){
@@ -317,7 +318,7 @@ final controller=Get.put(GameController());
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomText(
-                        text: "Sound",
+                        text: "sound".tr,
                         color: whiteColor,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
@@ -329,11 +330,39 @@ final controller=Get.put(GameController());
                   ),
                 ),
               ),),
-
               kSizedBoxH30,
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-                child: CustomText(text: "General",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                child: CustomText(text: "language_settings".tr,color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+              ),
+              GestureDetector(
+                onTap: () {
+                  context.navigateAndRemoveUntil(const ChangeLanguageScreen(), true);
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  width: MediaQuery.of(context).size.width,
+                  height: 60.h,
+                  decoration: BoxDecoration(
+                    color: mainColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(text: "change_language".tr, color: whiteColor, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                      kSizedBoxW5,
+                      Icon(Icons.language, color: whiteColor, size: 30.sp),
+                    ],
+                  ),
+
+                ),
+              ),
+              kSizedBoxH30,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
+                child: CustomText(text: "general".tr,color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: () {
@@ -351,7 +380,7 @@ final controller=Get.put(GameController());
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomText(text: "Privacy Policy", color: whiteColor, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                      CustomText(text: "policy".tr, color: whiteColor, fontSize: 16.sp, fontWeight: FontWeight.bold),
                       kSizedBoxW5,
                       Image.asset('assets/images/privacy.webp', width: 40.w, height: 40.h),
                     ],
@@ -373,7 +402,7 @@ final controller=Get.put(GameController());
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CustomText(text: "Version", color: whiteColor, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    CustomText(text: "version".tr, color: whiteColor, fontSize: 16.sp, fontWeight: FontWeight.bold),
                     kSizedBoxW5,
                     CustomText(text: version, color: whiteColor, fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ],

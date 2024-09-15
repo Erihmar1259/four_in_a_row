@@ -60,6 +60,115 @@ class GameController extends GetxController {
     }
     box.write("isMuted", isMuted.value);
   }
+  bool checkDraw() {
+    for (int col = 0; col < 7; col++) {
+      if (board[0][col] == 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+  // void dropDisc(int col) {
+  //   var box = GetStorage();
+  //   if (isGameOver.value) return;
+  //
+  //   for (int row = 5; row >= 0; row--) {
+  //     if (board[row][col] == 0) {
+  //       board[row][col] = currentPlayer.value;
+  //       board.refresh(); // Ensure the board is refreshed
+  //       if (checkWin(row, col)) {
+  //         isGameOver.value = true;
+  //         if (currentPlayer.value == 1) {
+  //           if (isSinglePlayer.value) {
+  //             sgPlayer1Wins.value++;
+  //             playWinSound();
+  //             var sP1 = box.read("sgP1") ?? 0;
+  //             if (sP1 < sgPlayer1Wins.value) {
+  //               box.write("sgP1", sgPlayer1Wins.value);
+  //             }
+  //
+  //           } else {
+  //             player1Wins.value++;
+  //             playWinSound();
+  //             var p1 = box.read("p1") ?? 0;
+  //             if (p1 < player1Wins.value) {
+  //               box.write("p1", player1Wins.value);
+  //             }
+  //
+  //           }
+  //
+  //         } else {
+  //           if (isSinglePlayer.value) {
+  //             sgPlayer2Wins.value++;
+  //             playWinSound();
+  //             var sP2 = box.read("sgP2") ?? 0;
+  //             if (sP2 < sgPlayer2Wins.value) {
+  //               box.write("sgP2", sgPlayer2Wins.value);
+  //             }
+  //           } else {
+  //             player2Wins.value++;
+  //             playWinSound();
+  //             var p2 = box.read("p2") ?? 0;
+  //             if (p2 < player2Wins.value) {
+  //               box.write("p2", player2Wins.value);
+  //             }
+  //           }
+  //
+  //         }
+  //         Get.defaultDialog(
+  //             barrierDismissible: false,
+  //             contentPadding: EdgeInsets.all(20.w),
+  //             backgroundColor: mainColor.withOpacity(0.5),
+  //             title: "congratulations".tr,
+  //             titleStyle: TextStyle(color: whiteColor, fontSize: 20.sp),
+  //             middleText: "${'player'.tr} ${currentPlayer.value} ${'wins'.tr}!",
+  //             content: Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 CustomText(text: "player".tr, fontSize: 16.sp, color: yellowColor),
+  //                 Image.asset(
+  //                   currentPlayer.value == 1 ? greenImg : yellowImg,
+  //                   width: 30.w,
+  //                   height: 30.h,
+  //                 ),
+  //                 CustomText(text: "wins".tr, fontSize: 16.sp, color: yellowColor),
+  //               ],
+  //             ),
+  //             middleTextStyle: TextStyle(color: whiteColor, fontSize: 16.sp),
+  //             confirm: TextButton(
+  //                 onPressed: () {
+  //                   resetGame();
+  //                   Get.back();
+  //                 },
+  //                 child: Image.asset(
+  //                   restartImg,
+  //                   width: 30.w,
+  //                   height: 30.h,
+  //                 )),
+  //             cancel: TextButton(
+  //                 onPressed: () {
+  //                   resetGame();
+  //                   Get.offAll(const IntroScreen());
+  //                 },
+  //                 child: Image.asset(
+  //                   homeImg,
+  //                   width: 30.w,
+  //                   height: 30.h,
+  //                 )));
+  //         //Get.snackbar('Game Over', 'Player ${currentPlayer.value} wins!',snackPosition: SnackPosition.BOTTOM,colorText: whiteColor,backgroundColor: mainColor);
+  //       } else {
+  //         currentPlayer.value = 3 - currentPlayer.value; // Switch player
+  //         if (isSinglePlayer.value && currentPlayer.value == 2) {
+  //           isAiThinking.value = true;
+  //           Future.delayed(const Duration(milliseconds: 700), () {
+  //             aiMove();
+  //           });
+  //         }
+  //       }
+  //       break;
+  //     }
+  //   }
+  // }
   void dropDisc(int col) {
     var box = GetStorage();
     if (isGameOver.value) return;
@@ -78,7 +187,6 @@ class GameController extends GetxController {
               if (sP1 < sgPlayer1Wins.value) {
                 box.write("sgP1", sgPlayer1Wins.value);
               }
-
             } else {
               player1Wins.value++;
               playWinSound();
@@ -86,9 +194,7 @@ class GameController extends GetxController {
               if (p1 < player1Wins.value) {
                 box.write("p1", player1Wins.value);
               }
-
             }
-
           } else {
             if (isSinglePlayer.value) {
               sgPlayer2Wins.value++;
@@ -105,25 +211,24 @@ class GameController extends GetxController {
                 box.write("p2", player2Wins.value);
               }
             }
-
           }
           Get.defaultDialog(
               barrierDismissible: false,
               contentPadding: EdgeInsets.all(20.w),
               backgroundColor: mainColor.withOpacity(0.5),
-              title: "Congratulations",
+              title: "congratulations".tr,
               titleStyle: TextStyle(color: whiteColor, fontSize: 20.sp),
-              middleText: "Player ${currentPlayer.value} wins!",
+              middleText: "${'player'.tr} ${currentPlayer.value} ${'wins'.tr}!",
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomText(text: "Player ", fontSize: 16.sp, color: yellowColor),
+                  CustomText(text: "player".tr, fontSize: 16.sp, color: yellowColor),
                   Image.asset(
                     currentPlayer.value == 1 ? greenImg : yellowImg,
                     width: 30.w,
                     height: 30.h,
                   ),
-                  CustomText(text: " wins!", fontSize: 16.sp, color: yellowColor),
+                  CustomText(text: "wins".tr, fontSize: 16.sp, color: yellowColor),
                 ],
               ),
               middleTextStyle: TextStyle(color: whiteColor, fontSize: 16.sp),
@@ -147,7 +252,42 @@ class GameController extends GetxController {
                     width: 30.w,
                     height: 30.h,
                   )));
-          //Get.snackbar('Game Over', 'Player ${currentPlayer.value} wins!',snackPosition: SnackPosition.BOTTOM,colorText: whiteColor,backgroundColor: mainColor);
+        } else if (!checkDraw()) {
+          isGameOver.value = true;
+          Get.defaultDialog(
+              barrierDismissible: false,
+              contentPadding: EdgeInsets.all(20.w),
+              backgroundColor: mainColor.withOpacity(0.5),
+              title: "game_over".tr,
+              titleStyle: TextStyle(color: whiteColor, fontSize: 20.sp),
+              middleText: "draw".tr,
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(text: "draw".tr, fontSize: 16.sp, color: yellowColor),
+                ],
+              ),
+              middleTextStyle: TextStyle(color: whiteColor, fontSize: 16.sp),
+              confirm: TextButton(
+                  onPressed: () {
+                    resetGame();
+                    Get.back();
+                  },
+                  child: Image.asset(
+                    restartImg,
+                    width: 30.w,
+                    height: 30.h,
+                  )),
+              cancel: TextButton(
+                  onPressed: () {
+                    resetGame();
+                    Get.offAll(const IntroScreen());
+                  },
+                  child: Image.asset(
+                    homeImg,
+                    width: 30.w,
+                    height: 30.h,
+                  )));
         } else {
           currentPlayer.value = 3 - currentPlayer.value; // Switch player
           if (isSinglePlayer.value && currentPlayer.value == 2) {

@@ -15,6 +15,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../constants/image_const.dart';
 import '../controller/game_controller.dart';
+import '../languages/enum.dart';
 import '../utils/global.dart';
 import '../widgets/custom_text.dart';
 import 'how_to_play_screen.dart';
@@ -38,6 +39,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
+
         if (first == '') {
           if (context.mounted) {
             showDialog(
@@ -48,28 +50,34 @@ class _IntroScreenState extends State<IntroScreen> {
                   builder: (context, StateSetter setState) {
                     return AlertDialog(
                       content: SizedBox(
-                        height: 1.sh * 0.80,
+                        height: MediaQuery.of(context).size.height * 0.80,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             SingleChildScrollView(
                               child: SizedBox(
-                                  height: 1.sh * 0.65,
+                                  height:
+                                  MediaQuery.of(context).size.height * 0.65,
                                   width: double.infinity,
+                                  //width: MediaQuery.of(context).size.width * 0.90,
                                   child: WebViewWidget(
                                       controller: WebViewController()
-                                        ..loadHtmlString(Global.policyEn))),
+                                        ..loadHtmlString( Global.language == Language.zh.name
+                                            ? Global.policyZh:Global.policyEn))
+                              ),
                             ),
+                            // Text(Global.policy, style: TextStyle(fontSize: 12)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Checkbox(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(6)),
-                                  activeColor: mainColor,
+                                  activeColor: Colors.green,
                                   side: BorderSide(
                                     width: 1.5,
-                                    color: isChecked ? mainColor : Colors.black,
+                                    color:
+                                    isChecked ? Colors.green : Colors.black,
                                   ),
                                   value: isChecked,
                                   onChanged: (bool? value) {
@@ -83,28 +91,31 @@ class _IntroScreenState extends State<IntroScreen> {
                                     });
                                   },
                                 ),
-                                const CustomText(
-                                  text: "I agree to the privacy policy",
-                                ),
+                                CustomText(text:"agree".tr,
+                                  fontSize: 11.sp,)
                               ],
                             ),
                             ElevatedButton(
                               style: ButtonStyle(
                                   backgroundColor:
-                                      MaterialStateColor.resolveWith((states) =>
-                                          isAccepted ? mainColor : greyColor)),
-                              // ignore: sort_child_properties_last
-                              child: CustomText(
-                                text: "Accept and Continue",
-                                color: whiteColor,
-                              ),
+                                  MaterialStateColor.resolveWith((states) =>
+                                  isAccepted
+                                      ? secondaryColor
+                                      : greyColor)),
                               onPressed: isAccepted
                                   ? () async {
-                                      final box = GetStorage();
-                                      box.write('first', 'notfirst');
-                                      Navigator.pop(context);
-                                    }
+                               var box = GetStorage();
+                                box.write('first', 'done');
+                                if(context.mounted) Navigator.pop(context);
+                              }
                                   : null,
+                              child: Text(
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.white,
+                                ),
+                                "accept".tr,
+                              ),
                             ),
                           ],
                         ),
@@ -117,7 +128,7 @@ class _IntroScreenState extends State<IntroScreen> {
           }
         }
       } catch (e) {
-        // print("Error fetching SharedPreferences: $e");
+        print("Error fetching SharedPreferences: $e");
       }
     });
   }
@@ -153,14 +164,14 @@ class _IntroScreenState extends State<IntroScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomImageButton(
-                btnLabel: "How to play ?",
+                btnLabel: "how_to_play".tr,
                 onTapFun: () {
                   Get.to(const HowToPlayScreen());
                 },
               ),
               kSizedBoxH20,
               CustomImageButton(
-                btnLabel: "Play with AI",
+                btnLabel: "single_player".tr,
                 onTapFun: () {
                   controller.isSinglePlayer.value = true;
                   context.navigateAndRemoveUntil(const AiGameScreen(), true);
@@ -168,14 +179,14 @@ class _IntroScreenState extends State<IntroScreen> {
               ),
               kSizedBoxH20,
               CustomImageButton(
-                  btnLabel: "Two Players",
+                  btnLabel: "multi_player".tr,
                   onTapFun: () {
                     controller.isSinglePlayer.value = false;
                     context.navigateAndRemoveUntil(const GameScreen(), true);
                   }),
               kSizedBoxH20,
               CustomImageButton(
-                  btnLabel: "Exit",
+                  btnLabel: "exit".tr,
                   onTapFun: () {
                     exit(0);
                   }),

@@ -39,7 +39,7 @@ class AiGameScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomText(text: 'AI Difficulty', color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+            CustomText(text: 'ai_difficulty'.tr, color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
             kSizedBoxW10,
             Obx(() => DropdownButton<String>(
               dropdownColor: mainColor.withOpacity(0.5),
@@ -169,9 +169,9 @@ class AiGameScreen extends StatelessWidget {
             Obx(()=> Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomText(text: "It's Player ",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                CustomText(text: "${'its'.tr} ${'player'.tr} ",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
                 Image.asset(controller.currentPlayer.value == 1 ? greenImg : yellowImg,width: 20.w,height: 20.h,),
-                CustomText(text: "'s turn",color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                CustomText(text: "turn".tr,color: whiteColor, fontSize: 14.sp, fontWeight: FontWeight.bold),
               ],
             )),
             Expanded(
@@ -212,7 +212,7 @@ class AiGameScreen extends StatelessWidget {
             ),
 
             CustomImageButton(
-              btnLabel: "Restart Game",
+              btnLabel: "restart".tr,
               onTapFun: () {
                 controller.resetGame();
               },
